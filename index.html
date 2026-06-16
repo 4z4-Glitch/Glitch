@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glitch</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #111;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid #222;
+  }
+  header h1 {
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  header p {
+    font-size: 13px;
+    color: #999;
+    margin-top: 4px;
+  }
+  .map-wrap {
+    flex: 1;
+    min-height: 60vh;
+  }
+  .map-wrap iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 60vh;
+    border: 0;
+    display: block;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #161616;
+    border-top: 1px solid #222;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .actions a {
+    flex: 1;
+    min-width: 140px;
+    max-width: 240px;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: opacity 0.15s ease;
+  }
+  .actions a:active {
+    opacity: 0.7;
+  }
+  .btn-instagram {
+    background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+    color: #fff;
+  }
+  .btn-random {
+    background: #2a2a2a;
+    color: #eee;
+    border: 1px solid #3a3a3a;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Glitch</h1>
+  <p>Un'anomalia in viaggio nel mondo, di mano in mano.</p>
+</header>
+
+<div class="map-wrap">
+  <iframe style="width: 100%; height: 100%; border: 0;" allowfullscreen allow="geolocation" src="//umap.openstreetmap.fr/it/map/glitchs-road_1420990?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=caption&captionBar=false&captionMenus=true"></iframe>
+</div>
+
+<div class="actions">
+  <a class="btn-instagram" href="https://instagram.com/" target="_blank">Segui su Instagram</a>
+  <a class="btn-random" href="https://www.robarandom.4z4.club/roba-random" target="_blank">Roba Random</a>
+</div>
+
+</body>
+</html>
