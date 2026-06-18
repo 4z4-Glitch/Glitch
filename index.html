@@ -207,10 +207,13 @@
 <div class="modal-overlay" id="uploadModal">
   <div class="modal">
     <h2>Carica una foto di Glitch</h2>
-    <p class="sub">Anonimo. Bastano città e data.</p>
+    <p class="sub">Anonimo. Bastano città, paese e data.</p>
     <form id="glitchForm">
       <label for="citta">Città</label>
       <input type="text" id="citta" name="citta" placeholder="Es. Torino" required>
+
+      <label for="paese">Paese</label>
+      <input type="text" id="paese" name="paese" placeholder="Es. Italia" required>
 
       <label for="data">Data</label>
       <input type="date" id="data" name="data" required>
@@ -236,6 +239,7 @@
     const status = document.getElementById('formStatus');
     const fileInput = document.getElementById('foto');
     const citta = document.getElementById('citta').value;
+    const paese = document.getElementById('paese').value;
     const data = document.getElementById('data').value;
     const files = Array.from(fileInput.files);
 
@@ -268,6 +272,7 @@
       fileToBase64(files[index]).then(({ base64, tipo }) => {
         const params = new URLSearchParams();
         params.append('citta', citta);
+        params.append('paese', paese);
         params.append('data', data);
         params.append('foto', base64);
         params.append('fotoTipo', tipo);
