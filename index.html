@@ -74,10 +74,102 @@
     background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
     color: #fff;
   }
-  .btn-random {
+  .btn-upload {
     background: #2a2a2a;
     color: #eee;
     border: 1px solid #3a3a3a;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Modale upload */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open {
+    display: flex;
+  }
+  .modal {
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 360px;
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h2 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .modal p.sub {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+  .modal label {
+    display: block;
+    font-size: 12px;
+    color: #bbb;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+  .modal input[type="text"],
+  .modal input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #111;
+    color: #eee;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .modal input[type="file"] {
+    width: 100%;
+    font-size: 13px;
+    color: #bbb;
+    margin-top: 4px;
+  }
+  .modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-cancel {
+    background: #2a2a2a;
+    color: #eee;
+  }
+  .btn-submit {
+    background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+    color: #fff;
+  }
+  .btn-submit:disabled {
+    opacity: 0.5;
+  }
+  .form-status {
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: center;
+    min-height: 18px;
   }
 </style>
 </head>
@@ -94,8 +186,89 @@
 
 <div class="actions">
   <a class="btn-instagram" href="https://instagram.com/" target="_blank">Segui su Instagram</a>
-  <a class="btn-random" href="https://www.robarandom.4z4.club/roba-random" target="_blank">Roba Random</a>
+  <button class="btn-upload" onclick="document.getElementById('uploadModal').classList.add('open')">Carica foto</button>
 </div>
+
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <h2>Carica una foto di Glitch</h2>
+    <p class="sub">Anonimo. Bastano città e data.</p>
+    <form id="glitchForm">
+      <label for="citta">Città</label>
+      <input type="text" id="citta" name="citta" placeholder="Es. Torino" required>
+
+      <label for="data">Data</label>
+      <input type="date" id="data" name="data" required>
+
+      <label for="foto">Foto (puoi selezionarne più di una)</label>
+      <input type="file" id="foto" name="foto" accept="image/*" multiple required>
+
+      <div class="modal-buttons">
+        <button type="button" class="btn-cancel" onclick="document.getElementById('uploadModal').classList.remove('open')">Annulla</button>
+        <button type="submit" class="btn-submit" id="submitBtn">Invia</button>
+      </div>
+      <div class="form-status" id="formStatus"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxs89NaLfSrlj4GVxtTroE0PjL1SkI7EowwyfqIUtn3WgLLznuC4Kb7CMF_R4TyOT7n/exec";
+
+  document.getElementById('glitchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    const status = document.getElementById('formStatus');
+    const fileInput = document.getElementById('foto');
+    const citta = document.getElementById('citta').value;
+    const data = document.getElementById('data').value;
+    const files = Array.from(fileInput.files);
+
+    if (files.length === 0) return;
+
+    submitBtn.disabled = true;
+
+    function fileToBase64(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({ base64: reader.result, tipo: file.type });
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function inviaUno(index) {
+      if (index >= files.length) {
+        status.textContent = "Fatto! Grazie.";
+        submitBtn.disabled = false;
+        setTimeout(() => {
+          document.getElementById('uploadModal').classList.remove('open');
+          document.getElementById('glitchForm').reset();
+          status.textContent = "";
+        }, 1500);
+        return;
+      }
+
+      status.textContent = "Invio foto " + (index + 1) + " di " + files.length + "...";
+
+      fileToBase64(files[index]).then(({ base64, tipo }) => {
+        const params = new URLSearchParams();
+        params.append('citta', citta);
+        params.append('data', data);
+        params.append('foto', base64);
+        params.append('fotoTipo', tipo);
+
+        fetch(SCRIPT_URL, { method: 'POST', body: params })
+          .then(() => inviaUno(index + 1))
+          .catch(() => {
+            status.textContent = "Errore alla foto " + (index + 1) + ", riprova.";
+            submitBtn.disabled = false;
+          });
+      });
+    }
+
+    inviaUno(0);
+  });
+</script>
 
 </body>
 </html>
