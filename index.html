@@ -218,6 +218,9 @@
       <label for="data">Data</label>
       <input type="date" id="data" name="data" required>
 
+      <label for="testo">Scrivi qualcosa (opzionale)</label>
+      <textarea id="testo" name="testo" placeholder="Dove hai trovato Glitch? Dove lo mandi?" rows="3" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #333;background:#111;color:#eee;font-size:14px;font-family:inherit;resize:vertical;margin-top:4px;"></textarea>
+
       <label for="foto">Foto (puoi selezionarne più di una)</label>
       <input type="file" id="foto" name="foto" accept="image/*" multiple required>
 
@@ -241,6 +244,7 @@
     const citta = document.getElementById('citta').value;
     const paese = document.getElementById('paese').value;
     const data = document.getElementById('data').value;
+    const testo = document.getElementById('testo').value;
     const files = Array.from(fileInput.files);
 
     if (files.length === 0) return;
@@ -274,6 +278,7 @@
         params.append('citta', citta);
         params.append('paese', paese);
         params.append('data', data);
+        params.append('testo', testo);
         params.append('foto', base64);
         params.append('fotoTipo', tipo);
 
